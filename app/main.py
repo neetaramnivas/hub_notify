@@ -4,6 +4,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+# Import your queue setup utility
+from app.queue.utils import setup_queues
+
 from app.routers.notify import router as notify_router
 from app.routers.jobs import router as jobs_router
 from app.workers import (
@@ -14,10 +17,12 @@ from app.workers import (
     sms_worker,
 )
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Start all queue workers as background tasks
+    # 1. Initialize RabbitMQ infrastructure first
+    await setup_queues()
+    
+    # 2. Start all queue workers as background tasks
     workers = [
         file_worker.run,
         rag_worker.run,
@@ -26,7 +31,10 @@ async def lifespan(app: FastAPI):
         analytics_worker.run,
     ]
     tasks = [asyncio.create_task(w()) for w in workers]
+    
     yield
+    
+    # 3. Graceful shutdown
     for t in tasks:
         t.cancel()
     await asyncio.gather(*tasks, return_exceptions=True)
@@ -54,4 +62,3 @@ app.include_router(jobs_router, prefix="/api/v1")
 @app.get("/api/v1/health", tags=["health"])
 async def health():
     return {"status": "ok", "service": "cixiohub-notify"}
-
