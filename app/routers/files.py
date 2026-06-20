@@ -18,7 +18,7 @@ async def _save_and_publish(file: UploadFile, mode: str):
         
         # LOGIC CHANGE: Select channel based on mode
         # 'ai_analyze' goes to AI queue, 'store_only' goes to file upload queue
-        target_channel = "ai_orchestration" if mode == "ai_analyze" else "file_upload"
+        target_channel = "ai_orchestration" if mode == "ai_analyze" else "file_uploads"
         
         payload = NotifyPayload(
             job_id=str(uuid.uuid4()),

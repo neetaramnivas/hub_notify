@@ -5,10 +5,10 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     # Database (shared with backend)
-    database_url: str = "postgresql+asyncpg://cixiohub:cixiohub@localhost:5432/cixiohub"
+    database_url: str = "postgresql+asyncpg://postgres:Neeta%%402005@localhost:5432/cixiohub"
 
     # RabbitMQ
-    rabbitmq_url: str = "amqp://guest:guest@localhost:5672/"
+    rabbitmq_url: str ="amqp://guest:guest@localhost:5672/"
     max_retry_attempts: int = 4
 
     # Email (SMTP)

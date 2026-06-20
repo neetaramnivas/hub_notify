@@ -10,6 +10,9 @@ ALL_QUEUES = [
     "email.process",
     "sms.process",
     "push.process",
+    "notify.bulk_email",
+    "notify.bulk_sms",
+
 
     # AI Pipeline
     "ai.orchestration",
